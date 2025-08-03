@@ -599,14 +599,25 @@ function App() {
         semester: "Fall/Spring"
       };
     } else {
-              // Find the course in any category that has individual courses
-        for (const [, category] of Object.entries(CS_REQUIREMENTS.coreRequirements)) {
+      // Find the course in any category that has individual courses
+      for (const [, category] of Object.entries(CS_REQUIREMENTS.coreRequirements)) {
         if (category.courses) {
           const foundCourse = category.courses.find(c => c.code === courseCode);
           if (foundCourse) {
             course = foundCourse;
             break;
           }
+        }
+        // Check for courses in sequences (like physics courses)
+        if (category.sequences) {
+          for (const sequence of category.sequences) {
+            const foundCourse = sequence.courses.find(c => c.code === courseCode);
+            if (foundCourse) {
+              course = foundCourse;
+              break;
+            }
+          }
+          if (course) break;
         }
       }
     }
